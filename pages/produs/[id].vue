@@ -1,8 +1,4 @@
-<template>
-  <div>
-    <!-- Your template code here -->
-  </div>
-</template>
+<template></template>
 
 <script setup>
 // Your script setup code here

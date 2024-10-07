@@ -34,20 +34,29 @@ export default defineNuxtConfig({
       "produs/[id]": {
         ru: "/продукт/[id]",
       },
+      livrare: {
+        ru: "/доставка",
+      },
     },
   },
 
   compatibilityDate: "2024-10-03",
+
   runtimeConfig: {
     apiToken: process.env.NUXT_API_TOKEN,
     public: {
       baseURL: process.env.NUXT_BASE_URL,
     },
   },
+
   colorMode: {
     classSuffix: "-mode",
     preference: "system",
     storage: "localStorage",
     storageKey: "nuxt-color-mode",
+  },
+
+  devtools: {
+    enabled: false,
   },
 });

@@ -1,15 +1,21 @@
 <template>
-  <div class="cursor-pointer flex items-center">
-    <select
-      v-model="selectedLocale"
-      @change="switchLocale(selectedLocale)"
-      class="bg-transparent border-none custom-select"
-    >
-      <option v-for="locale in locales" :key="locale.code" :value="locale.code">
-        {{ locale.name }}
-      </option>
-    </select>
-    <UIcon size="22" name="i-ph:caret-down" />
+  <div class="cursor-pointer">
+    <div class="cursor-pointer flex items-center">
+      <select
+        v-model="selectedLocale"
+        @change="switchLocale(selectedLocale)"
+        class="bg-transparent border-none custom-select"
+      >
+        <option
+          v-for="locale in locales"
+          :key="locale.code"
+          :value="locale.code"
+        >
+          {{ locale.name }}
+        </option>
+      </select>
+      <UIcon size="22" name="i-ph:caret-down" />
+    </div>
   </div>
 </template>
 

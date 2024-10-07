@@ -7,7 +7,7 @@
       name="i-ph:sun"
       v-if="!isDarkMode"
       size="24"
-      class="dark:text-white text-white"
+      class="dark:text-white text-accent"
     />
     <UIcon name="i-ph:moon" v-else size="28" />
   </div>

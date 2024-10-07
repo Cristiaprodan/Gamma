@@ -5,12 +5,13 @@ const { t } = useI18n();
 
 <template>
   <div>
-    {{ t("welcome") }}
-  </div>
-  <div class="w-full flex">
-    <div class="hidden md:block w-[450px]"></div>
-    <div class="w-full">
-      <Slider />
+    <div class="w-full flex mt-5">
+      <div class="hidden lg:block w-[460px]"></div>
+      <div class="w-full">
+        <Slider />
+      </div>
     </div>
+    <TopCategory class="self-center" />
+    <DiscoutedProducts />
   </div>
 </template>

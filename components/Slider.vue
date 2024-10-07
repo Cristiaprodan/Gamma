@@ -29,7 +29,7 @@ onMounted(() => {
     v-slot="{ item }"
     :items="items"
     :ui="{ item: 'basis-full' }"
-    class="rounded-lg overflow-hidden"
+    class="rounded-lg overflow-hidden h-[]"
     indicators
   >
     <img :src="item" class="w-full" draggable="false" />

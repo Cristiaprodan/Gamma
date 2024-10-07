@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
       "vwkjp1gxgququu7p", // View ID
       {
         offset: 0,
-        limit: 1, // Fetch only one row
+        limit: 10, // Fetch only one row
         where: "",
       }
     );

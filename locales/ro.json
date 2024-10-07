@@ -2,9 +2,19 @@
   "welcome": "Bine ați venit",
   "goodbye": "La revedere",
   "despre noi": "Despre noi",
-  "contacte": "Contact",
+  "contacte": "Contacte",
   "magazin": "Magazin",
   "reduceri": "Reduceri",
   "casa": "Casa",
-  "Toate categoriile": "Toate categoriile"
+  "livrare": "Livrare",
+  "buy now": "Cumpară cu un clic",
+  "Toate categoriile": "Toate categoriile",
+  "Search products...": "Căutare produse...",
+  "Search results": "Rezultatele căutării",
+  "Cart is empty": "Coșul este gol",
+  "Top Categories": "Top categorii",
+  "Category": "Categorie",
+  "Add to Cart": "Adaugă în coș",
+  "50% off": "Reducere 50%",
+  "Discounted": "Reduceri"
 }
