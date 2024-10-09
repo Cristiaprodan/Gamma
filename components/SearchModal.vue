@@ -15,6 +15,7 @@
             class="text-primary dark:text-white mr-2"
           />
           <input
+            ref="searchInputRef"
             type="text"
             :placeholder="t('Search products...')"
             v-model="searchTerm"
@@ -39,7 +40,7 @@
 <script setup>
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
-import { onUnmounted, ref, watch } from "vue";
+import { ref, watch, onUnmounted, nextTick } from "vue";
 
 const props = defineProps({
   isOpen: {
@@ -54,6 +55,7 @@ const props = defineProps({
 
 const searchTerm = ref("");
 const modalRef = ref(null);
+const searchInputRef = ref(null); // Reference for the search input
 
 // Handle clicking outside of the modal to close
 const handleClickOutside = (event) => {
@@ -62,13 +64,15 @@ const handleClickOutside = (event) => {
   }
 };
 
-// Watch for modal open state and attach/remove event listener
+// Watch for modal open state and focus input field when opened
 watch(
   () => props.isOpen,
-  (newVal) => {
+  async (newVal) => {
     if (newVal) {
       document.addEventListener("mousedown", handleClickOutside);
       document.body.style.overflow = "hidden"; // Prevent background scroll
+      await nextTick(); // Ensure DOM is updated before focusing
+      searchInputRef.value?.focus(); // Focus the input
     } else {
       document.removeEventListener("mousedown", handleClickOutside);
       document.body.style.overflow = "unset"; // Re-enable background scroll

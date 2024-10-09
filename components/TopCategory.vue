@@ -1,5 +1,7 @@
 <template>
-  <div class="items-center w-full mt-10 mb-12">
+  <div
+    class="items-center md:w-full mt-10 mb-12 w-[100vw] ml-[-5vw] md:ml-0 md:mr-0"
+  >
     <div class="flex mb-10 justify-center">
       <h1 class="text-4xl font-bold text-center">{{ t("Top Categories") }}</h1>
     </div>
@@ -7,7 +9,7 @@
       class="flex gap-5 overflow-x-auto lg:overflow-x-hidden lg:justify-center"
     >
       <div
-        class="flex p-4 justify-between cursor-pointer dark:bg-charade-800 border border-charade-900 hover:border-accent bg-charade-950 w-[350px] h-[110px] rounded-xl shrink-0"
+        class="flex p-4 justify-between cursor-pointer dark:bg-charade-800 border border-charade-900 hover:border-accent bg-charade-950 w-[350px] h-[110px] rounded-xl shrink-0 m-1"
       >
         <div>
           <p class="text-white text-sm mb-2">{{ t("Category") }}</p>
@@ -21,7 +23,7 @@
         />
       </div>
       <div
-        class="flex p-4 justify-between cursor-pointer dark:bg-charade-800 border border-charade-900 hover:border-accent bg-charade-950 w-[350px] h-[110px] rounded-xl shrink-0"
+        class="flex p-4 justify-between cursor-pointer dark:bg-charade-800 border border-charade-900 hover:border-accent bg-charade-950 w-[350px] h-[110px] rounded-xl shrink-0 m-1"
       >
         <div>
           <p class="text-white text-sm mb-2">{{ t("Category") }}</p>
@@ -35,7 +37,7 @@
         />
       </div>
       <div
-        class="flex p-4 justify-between cursor-pointer dark:bg-charade-800 border border-charade-900 hover:border-accent bg-charade-950 w-[350px] h-[110px] rounded-xl shrink-0"
+        class="flex p-4 justify-between cursor-pointer dark:bg-charade-800 border border-charade-900 hover:border-accent bg-charade-950 w-[350px] h-[110px] rounded-xl shrink-0 m-1"
       >
         <div>
           <p class="text-white text-sm mb-2">{{ t("Category") }}</p>

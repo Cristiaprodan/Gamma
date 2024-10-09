@@ -14,37 +14,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { storeToRefs } from "pinia";
+import { useThemeStore } from "@/stores/theme";
 
-const isDarkMode = ref(false);
+const themeStore = useThemeStore();
 
-function toggleDarkMode() {
-  isDarkMode.value = !isDarkMode.value;
-  updateDarkMode();
-}
+// Destructure the reactive state using storeToRefs
+const { isDarkMode } = storeToRefs(themeStore);
 
-function updateDarkMode() {
-  if (isDarkMode.value) {
-    document.documentElement.classList.add("dark");
-    localStorage.setItem("theme", "dark");
-  } else {
-    document.documentElement.classList.remove("dark");
-    localStorage.setItem("theme", "light");
-  }
-}
-
-// On mounted, check the saved theme in localStorage or system preference
-onMounted(() => {
-  const savedTheme = localStorage.getItem("theme");
-  if (
-    savedTheme === "dark" ||
-    (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)
-  ) {
-    isDarkMode.value = true;
-    document.documentElement.classList.add("dark");
-  } else {
-    isDarkMode.value = false;
-    document.documentElement.classList.remove("dark");
-  }
-});
+// Directly call the toggleDarkMode method from the store
+const toggleDarkMode = themeStore.toggleDarkMode;
 </script>

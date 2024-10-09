@@ -29,7 +29,7 @@
       </div>
       <div class="flex justify-center items-center">
         <button
-          class="bg-gray-500 hover:bg-charade-900 py-[2px] text-white text-sm font-semibold px-4 rounded-lg hover:bg-accent-dark flex items-center justify-center content-center w-full"
+          class="dark:bg-gray-500 bg-gray-600 dark:hover:bg-charade-900 hover:bg-charade-900 py-[2px] text-white text-sm font-semibold px-4 rounded-lg hover:bg-accent-dark flex items-center justify-center content-center w-full"
         >
           {{ t("buy now")
           }}<UIcon name="i-ph:cursor-click" size="30" class="ml-2" />
@@ -97,12 +97,12 @@ const isFiftyPercentOff = computed(() => {
 
 .badge {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  background-color: red;
+  top: 0;
+  right: 0;
+  background-color: #ef4444;
   color: white;
   padding: 5px 10px;
-  border-radius: 5px;
+  border-radius: 0 0 0 10px;
   font-size: 0.75rem;
   font-weight: bold;
 }

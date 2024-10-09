@@ -15,6 +15,9 @@
         'h-[85vh]': isExpanded,
       }"
       ref="bottomBar"
+      @touchstart="handleTouchStart"
+      @touchmove="handleTouchMove"
+      @touchend="handleTouchEnd"
     >
       <div class="flex items-end justify-between w-[90%] px-5 h-full pb-5">
         <UIcon size="33" name="i-ph:phone" class="text-white" />
@@ -51,28 +54,41 @@
     <!-- Sidebar List -->
     <div
       :class="{
-        'md:hidden z-2 fixed bottom-0 w-[50%] h-[100vh] bg-white dark:bg-charade-950 right-0 border-l border-accent flex-auto flex flex-col items-center justify-start  transition-transform duration-300 ease-in-out': true,
+        'md:hidden z-5 fixed bottom-0 w-[50%] h-[100vh] bg-white dark:bg-charade-950 right-0 border-l border-accent flex-auto flex flex-col items-center justify-start  transition-transform duration-300 ease-in-out': true,
         'translate-x-0': isListOpen,
         'translate-x-full': !isListOpen,
       }"
       ref="sideList"
     >
       <div class="mt-20">
-        <DarkModeSwitcher class="mt-10" />
-        <Menu vertical class="mt-20" gapSize="20px" />
+        <Menu vertical class="mt-20" gapSize="20px" @click="closeSidebar" />
         <LangSwitcher class="mt-20" />
+        <NuxtLinkLocale to="/wishlist" @click.native="closeSidebar">
+          <div class="flex items-center gap-1 mt-10">
+            <p>{{ t("Wishlist") }}</p>
+            <UIcon size="30" name="i-ph:heart" class="mr-1" />
+          </div>
+        </NuxtLinkLocale>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { useI18n } from "vue-i18n";
+
 export default {
+  setup() {
+    const { t } = useI18n();
+    return { t };
+  },
   data() {
     return {
       isExpanded: false,
       isListOpen: false,
-      isModalVisible: false, // Move isModalVisible here
+      isModalVisible: false,
+      touchStartY: 0,
+      touchEndY: 0,
     };
   },
   methods: {
@@ -87,6 +103,9 @@ export default {
       this.isListOpen = !this.isListOpen;
       this.setupClickOutsideHandler();
     },
+    closeSidebar() {
+      this.isListOpen = false;
+    },
     setupClickOutsideHandler() {
       if (this.isExpanded || this.isListOpen) {
         document.addEventListener("mousedown", this.handleClickOutside);
@@ -98,7 +117,6 @@ export default {
       const bottomBar = this.$refs.bottomBar;
       const sideList = this.$refs.sideList;
 
-      // Close if click is outside the bottom bar or the sidebar list
       if (
         bottomBar &&
         !bottomBar.contains(event.target) &&
@@ -106,19 +124,31 @@ export default {
       ) {
         this.isExpanded = false;
         this.isListOpen = false;
-        document.removeEventListener("mousedown", this.handleClickOutside); // Clean up listener
+        document.removeEventListener("mousedown", this.handleClickOutside);
+      }
+    },
+    handleTouchStart(event) {
+      this.touchStartY = event.touches[0].clientY;
+    },
+    handleTouchMove(event) {
+      this.touchEndY = event.touches[0].clientY;
+    },
+    handleTouchEnd() {
+      if (this.touchStartY - this.touchEndY > 50) {
+        this.isExpanded = true;
+      } else if (this.touchEndY - this.touchStartY > 50) {
+        this.isExpanded = false;
       }
     },
   },
   watch: {
     isExpanded(newVal) {
       if (!newVal) {
-        this.isListOpen = false; // Close the sidebar when the bottom bar is collapsed
+        this.isListOpen = false;
       }
     },
   },
   mounted() {
-    // Ensure the click outside handler is cleaned up when the component is destroyed
     document.removeEventListener("mousedown", this.handleClickOutside);
   },
   beforeUnmount() {

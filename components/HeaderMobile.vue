@@ -1,89 +1,92 @@
 <template>
   <div
-    class="md:hidden flex justify-between items-center w-full h-[70px] border-b border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-charade-950/80 backdrop-filter backdrop-blur-lg px-3 z-3 relative"
+    class="md:hidden flex justify-between items-center w-full h-[77px] border-b border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-charade-950/80 backdrop-filter backdrop-blur-lg px-3 z-10 sticky top-0"
   >
-    <!-- Search Icon to open modal -->
-
     <!-- Logo: dark and light mode switch -->
     <NuxtLinkLocale to="/">
-      <img
-        :src="isDarkMode ? lightLogo : blackLogo"
-        :alt="isDarkMode ? 'Gamma Light' : 'Gamma Black'"
-        class="h-12 w-[150px] ml-5"
-      />
+      <div class="h-12 w-[150px] ml-5">
+        <img
+          v-if="blackLogo && lightLogo"
+          :src="themeStore.isDarkMode ? lightLogo : blackLogo"
+          alt="Gamma"
+          class="h-full w-full"
+        />
+      </div>
     </NuxtLinkLocale>
+
     <div class="flex items-center gap-5">
       <UIcon size="30" name="i-ph:user" class="mr-2" />
-      <UIcon size="30" name="i-ph:heart" class="mr-2" />
+      <DarkModeSwitcher />
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { useAsyncData } from "#imports";
-import { useRuntimeConfig } from "#imports";
+import { useThemeStore } from "@/stores/theme";
+import DarkModeSwitcher from "./DarkModeSwitcher.vue";
 
-// State for dark mode (switch logos)
+// References for logos
 const blackLogo = ref(null);
 const lightLogo = ref(null);
-const isDarkMode = ref(false);
 
-// Toggle dark mode manually (localStorage)
-const toggleDarkMode = () => {
-  isDarkMode.value = !isDarkMode.value;
-  localStorage.setItem("theme", isDarkMode.value ? "dark" : "light");
-  document.documentElement.classList.toggle("dark", isDarkMode.value);
-};
+// Access the theme store
+const themeStore = useThemeStore();
 
-// Load the stored theme from localStorage
-const loadTheme = () => {
-  const savedTheme = localStorage.getItem("theme");
-  isDarkMode.value = savedTheme === "dark";
-  document.documentElement.classList.toggle("dark", isDarkMode.value);
-};
-
-// Modal state
-const isModalVisible = ref(false);
-
-// Toggle function for modal visibility
-const toggleModal = () => {
-  isModalVisible.value = !isModalVisible.value;
-};
-
-onMounted(async () => {
-  loadTheme();
-
-  const { data: logoData, error } = await useAsyncData("getLogo", () =>
-    $fetch("/api/getLogo")
-  );
-  const config = useRuntimeConfig();
-
-  if (logoData?.value) {
-    const blackLogoObject = logoData.value["Logo Black"]?.[0];
-    const lightLogoObject = logoData.value["Logo"]?.[0];
-
-    if (blackLogoObject) {
-      blackLogo.value = `${config.public.baseURL}/${blackLogoObject.path}`;
-      console.log("Black logo path set to:", blackLogo.value);
-    } else {
-      console.error(
-        "Logo Black data is not available or in an unexpected format"
-      );
+// Function to fetch logo data from API
+const fetchLogoData = async () => {
+  try {
+    const response = await fetch("/api/marketingDesign");
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
+    const logoData = await response.json();
 
-    if (lightLogoObject) {
-      lightLogo.value = `${config.public.baseURL}/${lightLogoObject.path}`;
-      console.log("Light logo path set to:", lightLogo.value);
+    if (logoData.success && logoData.data.length > 0) {
+      const marketingData = logoData.data[0]; // Access the first record
+      blackLogo.value = marketingData.Logo_Black[0]; // Set the black logo for light mode
+      lightLogo.value = marketingData.Logo[0]; // Set the light logo for dark mode
+
+      // Store logos in localStorage for persistence
+      localStorage.setItem("blackLogo", blackLogo.value);
+      localStorage.setItem("lightLogo", lightLogo.value);
+
+      console.log("Fetched and stored logos:", {
+        lightLogo: lightLogo.value,
+        blackLogo: blackLogo.value,
+      });
     } else {
-      console.error("Logo data is not available or in an unexpected format");
+      console.warn("Logo data not successful or empty:", logoData);
     }
+  } catch (error) {
+    console.error("Error fetching logo:", error);
+  }
+};
+
+onMounted(() => {
+  // Load the saved theme (dark or light)
+  themeStore.loadSavedTheme();
+
+  // Retrieve logos from localStorage if available
+  const storedBlackLogo = localStorage.getItem("blackLogo");
+  const storedLightLogo = localStorage.getItem("lightLogo");
+
+  if (storedBlackLogo && storedLightLogo) {
+    blackLogo.value = storedBlackLogo;
+    lightLogo.value = storedLightLogo;
+    console.log("Loaded logos from localStorage:", {
+      lightLogo: lightLogo.value,
+      blackLogo: blackLogo.value,
+    });
   } else {
-    console.error("Logo data is not available or in an unexpected format");
+    // If not in localStorage, fetch from API
+    fetchLogoData();
   }
 
-  if (error?.value) {
-    console.error("Error fetching logo:", error.value);
-  }
+  console.log("Is Dark Mode:", themeStore.isDarkMode);
 });
 </script>
+
+<style scoped>
+/* Add your styles here if needed */
+</style>

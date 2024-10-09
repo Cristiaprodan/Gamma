@@ -1,17 +1,21 @@
 <template>
   <div
-    class="hidden md:flex justify-between items-center h-[75px] bg-charade-950 dark:bg-charade-900 max-w-[1350px] w-[95%] rounded-2xl mx-auto mt-2 z-10 relative"
+    class="hidden md:flex justify-between items-center h-[75px] bg-charade-950 dark:bg-charade-900 max-w-[1350px] w-[95%] rounded-2xl mx-auto mt-2 z-50 sticky top-3"
   >
     <div class="flex justify-between items-center w-full">
-      <!-- Display the logo if available -->
+      <!-- Display the logo if available, else show skeleton -->
       <NuxtLinkLocale to="/">
-        <img v-if="logo" :src="logo" alt="Gamma" class="h-12 w-[150px] ml-5" />
+        <div class="h-12 w-[150px] ml-5">
+          <img v-if="logo" :src="logo" alt="Gamma" class="h-full w-full" />
+        </div>
       </NuxtLinkLocale>
       <SearchBar />
       <div class="flex items-center">
         <Cart class="mr-4" />
         <UIcon size="26" name="i-ph:user" class="mr-3 text-white" />
-        <UIcon size="26" name="i-ph:heart-straight" class="mr-5 text-white" />
+        <NuxtLinkLocale to="/wishlist">
+          <UIcon size="26" name="i-ph:heart-straight" class="mr-5 text-white" />
+        </NuxtLinkLocale>
         <DarkModeSwitcher class="mr-4" />
       </div>
     </div>
@@ -19,36 +23,25 @@
 </template>
 
 <script setup>
-import { useAsyncData } from "#imports";
 import { ref } from "vue";
-import { useRuntimeConfig } from "#imports";
 
-const logo = ref(null);
-
+// Use `useFetch` for both SSR and client-side rendering
 const {
   data: logoData,
   pending,
   error,
-} = await useAsyncData(
-  "getLogo",
-  () => $fetch("/api/getLogo") // $fetch is Nuxt's wrapper around `fetch` optimized for SSR
-);
+} = await useFetch("/api/marketingDesign");
 
-const config = useRuntimeConfig();
+// Reference for logo
+const logo = ref(null);
 
-if (logoData?.value?.Logo?.length > 0) {
-  logo.value = `${config.public.baseURL}/${logoData.value.Logo[0].signedPath}`;
-} else {
-  console.error("Logo data is not available or in an unexpected format");
+if (logoData.value?.success && logoData.value.data?.length) {
+  const marketingData = logoData.value.data[0];
+  logo.value = marketingData.Logo[0];
 }
 
+// Check for any errors and log them
 if (error.value) {
   console.error("Error fetching logo:", error.value);
-}
-
-const isModalVisible = ref(false);
-
-function toggleModal() {
-  isModalVisible.value = !isModalVisible.value;
 }
 </script>

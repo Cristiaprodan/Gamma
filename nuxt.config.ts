@@ -1,8 +1,7 @@
 import { config } from "dotenv";
 config();
-
 export default defineNuxtConfig({
-  modules: ["@nuxtjs/i18n", "@nuxt/ui"],
+  modules: ["@nuxtjs/i18n", "@nuxt/ui", "@pinia/nuxt"],
 
   i18n: {
     locales: ["ro", "ru"],
@@ -17,25 +16,40 @@ export default defineNuxtConfig({
     customRoutes: "config",
     pages: {
       "despre-noi": {
-        ru: "/о-нас",
+        ru: "/o-nas",
       },
       contacte: {
-        ru: "/контакты",
+        ru: "/kontakty",
       },
       "magazin/index": {
-        ru: "/магазин/",
+        ru: "/magazin/",
       },
       "magazin/reduceri": {
-        ru: "/магазин/скидки",
+        ru: "/magazin/skidki",
       },
       "magazin/casa": {
-        ru: "/магазин/касса",
+        ru: "/magazin/kassa",
       },
       "produs/[id]": {
-        ru: "/продукт/[id]",
+        ru: "/produkt/[id]",
       },
       livrare: {
-        ru: "/доставка",
+        ru: "/dostavka",
+      },
+      "categoria/[id]": {
+        ru: "/kategoriya/[id]",
+      },
+      "termeni-si-conditii": {
+        ru: "/usloviya-i-terminy",
+      },
+      "schimb-si-returnare": {
+        ru: "/obmen-i-vozvrat",
+      },
+      "politica-de-confidentialitate": {
+        ru: "/politika-konfidentsialnosti",
+      },
+      garantie: {
+        ru: "/garantiya",
       },
     },
   },
