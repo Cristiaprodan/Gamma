@@ -28,17 +28,16 @@
             :to="
               localePath({
                 name: 'categoria-id',
-                params: { id: createSlug(getCategoryName(category)) },
+                params: { id: createSlug(getCategoryName(category)) }, // Create the slug dynamically
               })
             "
             class="flex justify-between w-full"
             active-class="hovered-accent"
           >
             <div class="flex items-center">
-              <!-- Display category icon -->
               <UIcon :name="`i-ph:${category.Icons}`" size="23" class="mr-4" />
-              <!-- Display the appropriate category name based on locale -->
               {{ getCategoryName(category) }}
+              <!-- Display category name based on locale -->
             </div>
             <UIcon name="i-ph:caret-right" class="ml-2" size="20" />
           </NuxtLink>
@@ -51,7 +50,7 @@
 <script setup>
 import { ref, onMounted, watch, nextTick } from "vue";
 import { useI18n } from "vue-i18n";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import slugify from "slugify";
 
 const { t, locale } = useI18n();
@@ -61,6 +60,7 @@ const isDropdownOpen = ref(false);
 const isHomePage = ref(false);
 const dropdownHeight = ref(0);
 const route = useRoute();
+const router = useRouter(); // Import the router to handle programmatic navigation
 
 // Function to fetch categories immediately during load
 const fetchCategories = async () => {
@@ -93,6 +93,24 @@ const toggleDropdown = () => {
     calculateDropdownHeight();
   });
 };
+
+// Watch for locale changes and adjust the URL slug
+watch(locale, (newLocale) => {
+  const categoryId = route.params.id; // Current category slug from the URL
+  const category = categories.value.find(
+    (cat) => createSlug(getCategoryName(cat)) === categoryId
+  );
+
+  if (category) {
+    const newSlug = createSlug(getCategoryName(category)); // Recompute the slug based on the new locale
+    if (categoryId !== newSlug) {
+      router.push({
+        name: "categoria-id",
+        params: { id: newSlug },
+      });
+    }
+  }
+});
 
 // On component mount
 onMounted(async () => {
