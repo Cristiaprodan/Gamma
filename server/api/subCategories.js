@@ -1,4 +1,4 @@
-import pool from "~/server/db";
+import pool from '~/server/db';
 
 let cache = {
   subcategories: {},
@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
   if (!categoryId) {
     return {
       success: false,
-      error: "Category ID is required",
+      error: 'Category ID is required',
     };
   }
 
@@ -64,7 +64,7 @@ export default defineEventHandler(async (event) => {
           images = parsedImages.map((img) => `${baseUrl}/${img.path}`);
         } catch (e) {
           console.error(
-            "Failed to parse images for subcategory ID",
+            'Failed to parse images for subcategory ID',
             subcategory.id
           );
         }
@@ -89,15 +89,15 @@ export default defineEventHandler(async (event) => {
     return { success: true, data: formattedData };
   } catch (error) {
     console.error(
-      "Error fetching subcategories and sub-subcategories:",
+      'Error fetching subcategories and sub-subcategories:',
       error.message
     );
-    console.error("Full error details:", error.stack);
+    console.error('Full error details:', error.stack);
 
     return {
       success: false,
       error:
-        error.message || "Failed to fetch subcategories and sub-subcategories",
+        error.message || 'Failed to fetch subcategories and sub-subcategories',
     };
   }
 });

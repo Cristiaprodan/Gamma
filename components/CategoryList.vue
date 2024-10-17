@@ -2,7 +2,7 @@
   <!-- Category List (shown when no category is selected) -->
   <div v-if="!selectedCategory">
     <h2 class="text-2xl font-semibold mb-4">
-      {{ $t("Toate Categoriiile") }}
+      {{ $t('Toate Categoriiile') }}
     </h2>
     <ul>
       <li
@@ -38,7 +38,7 @@
       class="mb-4 hover:underline flex items-center gap-2"
     >
       <UIcon name="i-ph:caret-left" size="23" />
-      <p class="text-xl">{{ $t("inapoi") }}</p>
+      <p class="text-xl">{{ $t('inapoi') }}</p>
     </button>
 
     <!-- Subcategories Section -->
@@ -92,10 +92,10 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { useFetch } from "#app";
-import { useI18n } from "vue-i18n";
-import slugify from "slugify";
+import { ref } from 'vue';
+import { useFetch } from '#app';
+import { useI18n } from 'vue-i18n';
+import slugify from 'slugify';
 
 // Categories ref to store fetched data
 const categories = ref([]);
@@ -104,7 +104,7 @@ const selectedCategory = ref(null);
 const error = ref(null);
 
 // Fetch the categories data from the API
-const { data, pending, error: fetchError } = await useFetch("/api/categories");
+const { data, pending, error: fetchError } = await useFetch('/api/categories');
 
 // Once the data is available, update the categories ref
 if (data.value && data.value.success) {
@@ -116,7 +116,7 @@ const { locale } = useI18n();
 
 // Function to get category name based on locale
 const getCategoryName = (category) => {
-  return locale.value === "ru"
+  return locale.value === 'ru'
     ? category.Nume_Categorie_RU
     : category.Nume_Categorie_RO;
 };
@@ -124,7 +124,7 @@ const getCategoryName = (category) => {
 // Function to create slug from the category name
 const createSlug = (text) => {
   return slugify(text, {
-    replacement: "-", // Replace spaces with hyphens
+    replacement: '-', // Replace spaces with hyphens
     lower: true, // Convert the text to lowercase
     strict: true, // Remove special characters
   }).toLowerCase();
@@ -153,26 +153,26 @@ const goBack = () => {
 
 // Functions to handle subcategory names and links (same as in your first component)
 const getSubcategoryName = (subcategory) => {
-  return locale.value === "ru"
-    ? subcategory.subcategory_name_ru || "Unnamed"
-    : subcategory.subcategory_name_ro || "Unnamed";
+  return locale.value === 'ru'
+    ? subcategory.subcategory_name_ru || 'Unnamed'
+    : subcategory.subcategory_name_ro || 'Unnamed';
 };
 
 const getSubsubName = (subsub) => {
-  return locale.value === "ru"
-    ? subsub.subsub_name_ru || "Unnamed"
-    : subsub.subsub_name_ro || "Unnamed";
+  return locale.value === 'ru'
+    ? subsub.subsub_name_ru || 'Unnamed'
+    : subsub.subsub_name_ro || 'Unnamed';
 };
 
 const generateSubcategoryLink = (subcategory) => {
-  if (!selectedCategory.value || !subcategory) return ""; // Ensure non-empty values
+  if (!selectedCategory.value || !subcategory) return ''; // Ensure non-empty values
   return `/categoria/${createSlug(
     selectedCategory.value.Nume_Categorie_RO
   )}/${createSlug(subcategory.subcategory_name_ro)}`;
 };
 
 const generateSubsubcategoryLink = (subcategory, subsub) => {
-  if (!selectedCategory.value || !subcategory || !subsub) return ""; // Ensure all values exist
+  if (!selectedCategory.value || !subcategory || !subsub) return ''; // Ensure all values exist
   return `/categoria/${createSlug(
     selectedCategory.value.Nume_Categorie_RO
   )}/${createSlug(subcategory.subcategory_name_ro)}/${createSlug(

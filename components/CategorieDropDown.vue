@@ -7,7 +7,7 @@
       @click="toggleDropdown"
     >
       <UIcon name="i-ph:dots-nine-bold" class="mr-2" size="23" />
-      <p>{{ t("Toate categoriile") }}</p>
+      <p>{{ t('Toate categoriile') }}</p>
       <UIcon name="i-ph:caret-down-bold" class="ml-2" size="20" />
     </button>
 
@@ -73,10 +73,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, nextTick } from "vue";
-import { useI18n } from "vue-i18n";
-import { useRoute, useRouter } from "vue-router";
-import slugify from "slugify";
+import { ref, onMounted, watch, nextTick } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoute, useRouter } from 'vue-router';
+import slugify from 'slugify';
 
 const { t, locale } = useI18n();
 const localePath = useLocalePath();
@@ -92,14 +92,14 @@ const hoveredCategoryId = ref(null);
 // Function to fetch categories immediately during load
 const fetchCategories = async () => {
   try {
-    const response = await fetch("/api/categories");
+    const response = await fetch('/api/categories');
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = await response.json();
     categories.value = data.data;
   } catch (error) {
-    console.error("Error fetching categories:", error);
+    console.error('Error fetching categories:', error);
   }
 };
 
@@ -110,7 +110,7 @@ const getHoveredCategory = () => {
 };
 // Function to calculate the height of the dropdown
 const calculateDropdownHeight = () => {
-  const dropdownMenu = document.querySelector(".categories");
+  const dropdownMenu = document.querySelector('.categories');
   if (dropdownMenu) {
     dropdownHeight.value = dropdownMenu.scrollHeight;
   }
@@ -145,7 +145,7 @@ watch(locale, (newLocale) => {
     const newSlug = createSlug(category); // Always use Nume_Categorie_RO
     if (categoryId !== newSlug) {
       router.push({
-        name: "categoria-id",
+        name: 'categoria-id',
         params: { id: newSlug },
       });
     }
@@ -156,7 +156,7 @@ watch(locale, (newLocale) => {
 onMounted(async () => {
   await fetchCategories();
 
-  if (route.path === "/" || route.path === "/ru") {
+  if (route.path === '/' || route.path === '/ru') {
     isHomePage.value = true; // Mark as homepage
     isDropdownOpen.value = true; // Open dropdown by default on homepage
     nextTick(() => {
@@ -173,7 +173,7 @@ onMounted(async () => {
 watch(
   () => route.path,
   (newPath) => {
-    if (newPath === "/" || newPath === "/ru") {
+    if (newPath === '/' || newPath === '/ru') {
       isHomePage.value = true;
       isDropdownOpen.value = true; // Always open on homepage
       nextTick(() => {
@@ -192,18 +192,22 @@ watch(
 
 // Get the appropriate category name based on the current language
 const getCategoryName = (category) => {
-  return locale.value === "ru"
+  return locale.value === 'ru'
     ? category.Nume_Categorie_RU
     : category.Nume_Categorie_RO;
 };
 
 // Use the `slugify` package to create a slug for the URL using only Nume_Categorie_RO
 const createSlug = (category) => {
-  return slugify(category.Nume_Categorie_RO, {
-    replacement: "-", // Replace spaces with hyphens
-    lower: true, // Convert the text to lowercase
-    strict: true, // Remove special characters
-  }).toLowerCase(); // Force everything to be lowercase
+  return (
+    slugify(category.Nume_Categorie_RO, {
+      replacement: '-', // Replace spaces with hyphens
+      lower: true, // Convert the text to lowercase
+      strict: true, // Remove special characters
+    }).toLowerCase() +
+    '_' +
+    category.id
+  ); // Force everything to be lowercase
 };
 </script>
 
